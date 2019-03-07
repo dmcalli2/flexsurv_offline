@@ -8,6 +8,7 @@ lapply(list.files("R", full.names = TRUE), source)
 
 
 ## Add covariates to data frame
+set.seed(1234)
 bosms3 <- flexsurv::bosms3 %>% 
   mutate(var1 = rnorm(nrow(flexsurv::bosms3 ), mean = status*0.2, sd = 0.5))
 
@@ -27,4 +28,6 @@ tmat <- rbind(c(NA,1,2),c(NA,NA,3),c(NA,NA,NA))
 # Run with covariates under full likelihood and separate model setting
 pmatrix.fs(bexp, t=5, trans=tmat, newdata = data.frame(var1 = c(0,1,2)))
 pmatrix.fs(bexp.list, t=5, trans=tmat, newdata = data.frame(var1 = c(0,1,2)))
-pmatrix.fs(bexp.list, t=5, trans=tmat, newdata = data.frame(var1 = 1))
+
+pmatrix.fs(bexp, t=5, trans=tmat, newdata = data.frame(var1 = 1))
+pmatrix.fs(bexp.list, t=5, trans=tmat, newdata = data.frame(var1 = c(1)))

@@ -258,15 +258,23 @@ pars.fmsm <- function(x, trans, newdata=NULL, tvar="trans")
         if (ntr != length(na.omit(as.vector(trans)))) stop(sprintf("x is a list of %s flexsurvreg objects, but trans indicates %s transitions", ntr, length(na.omit(as.vector(trans)))))
         basepar <- matrix(nrow=ntr, ncol=length(x[[1]]$dlist$pars), dimnames=list(NULL,x[[1]]$dlist$pars))
         for (i in 1:ntr){
-            X <- if (x[[i]]$ncovs==0) matrix(0) else form.model.matrix(x[[i]], as.data.frame(newdata))
+            X <- if (x[[i]]$ncovs==0) matrix(0) else {
+              ## If only a single value is supplied, duplicate this
+              if(nrow(newdata) == 1L) {
+                X <- form.model.matrix(x[[i]], as.data.frame(newdata))
+              } else if(nrow(newdata) == ntr){
+              X <- form.model.matrix(x[[i]], as.data.frame(newdata[i, ,drop = FALSE]))
+              } else stop("Newdata must have one row, or one row per allowed transition")
+              }
             beta <- if (x[[i]]$ncovs==0) 0 else x[[i]]$res.t[x[[i]]$covpars,"est"]
 # minor change, added index to X
-            browser()
+            # browser()
             basepar[i,] <- add.covs(x[[i]], x[[i]]$res.t[x[[i]]$dlist$pars,"est"], beta, 
-                                    X[i, , drop = FALSE], transform=FALSE)
+                                    X, transform=FALSE)
         }
     } else if (inherits(x, "flexsurvreg")) {
         newdata <- form.msm.newdata(x, newdata=newdata, tvar=tvar, trans=trans)
+        # browser()
         X <- form.model.matrix(x, newdata)   
         basepar <- add.covs(x, pars=x$res.t[x$dlist$pars,"est"], beta=x$res.t[x$covpars,"est"], X=X)
     } else
