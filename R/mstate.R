@@ -260,7 +260,10 @@ pars.fmsm <- function(x, trans, newdata=NULL, tvar="trans")
         for (i in 1:ntr){
             X <- if (x[[i]]$ncovs==0) matrix(0) else form.model.matrix(x[[i]], as.data.frame(newdata))
             beta <- if (x[[i]]$ncovs==0) 0 else x[[i]]$res.t[x[[i]]$covpars,"est"]
-            basepar[i,] <- add.covs(x[[i]], x[[i]]$res.t[x[[i]]$dlist$pars,"est"], beta, X, transform=FALSE)
+# minor change, added index to X
+            browser()
+            basepar[i,] <- add.covs(x[[i]], x[[i]]$res.t[x[[i]]$dlist$pars,"est"], beta, 
+                                    X[i, , drop = FALSE], transform=FALSE)
         }
     } else if (inherits(x, "flexsurvreg")) {
         newdata <- form.msm.newdata(x, newdata=newdata, tvar=tvar, trans=trans)
@@ -368,6 +371,7 @@ pars.fmsm <- function(x, trans, newdata=NULL, tvar="trans")
 ##' @export
 pmatrix.fs <- function(x, trans, t=1, newdata=NULL, ci=FALSE,
                        tvar="trans", sing.inf=1e+10, B=1000, cl=0.95, ...){
+
     ntr <- sum(!is.na(trans))
     n <- nrow(trans)
     dp <- function(t, y, parms, ...){

@@ -92,11 +92,22 @@ for(i in 2:length(models_all)){
 ## Run the final test
 res_txt <- pmatrix.fs(models_all,
                  trans = tmat,
-                 t = 1,
+                 t = seq(0,5, 1),
                  newdata = data.frame(var1 = c(1), var2 = c(1)),
-                 ci = TRUE)
+                 ci = FALSE)
 res_original <- pmatrix.fs(bexp.list,
                  trans = tmat,
                  t = 1,
                  newdata = data.frame(var1 = c(1), var2 = c(1)),
-                 ci = TRUE)
+                 ci = FALSE)
+
+## Examine extension
+res_txt2 <- map2(res_txt, names(res_txt), ~ {
+  .x <- as_tibble(.x)
+  .x <- .x %>% 
+    mutate(time = .y, initial_state = 1:nrow(.x))
+  .x
+  }
+  )
+res_txt2 <- bind_rows(res_txt2) 
+res_txt2

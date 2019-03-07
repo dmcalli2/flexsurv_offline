@@ -40,7 +40,7 @@ texted_augment <- map(texted_augment, function(x){
 a1 <- pmatrix.fs(bexp.list, 
                  trans = tmat, 
                  t = 1, 
-                 newdata = data.frame(var1 = c(1), var2 = c(1)),
+                 newdata = data.frame(var1 = c(1,1), var2 = c(1,1)),
                  ci = FALSE)
 a2 <- pmatrix.fs(texted_augment,
                  trans = tmat,
