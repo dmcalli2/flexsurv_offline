@@ -31,3 +31,6 @@ pmatrix.fs(bexp.list, t=5, trans=tmat, newdata = data.frame(var1 = c(0,1,2)))
 
 pmatrix.fs(bexp, t=5, trans=tmat, newdata = data.frame(var1 = 1))
 pmatrix.fs(bexp.list, t=5, trans=tmat, newdata = data.frame(var1 = c(1)))
+
+
+pmatrix.fs(bexp.list, t=5, trans=tmat, newdata = data.frame(var1 = c(0,1,2)), ci = TRUE)

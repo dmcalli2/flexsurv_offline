@@ -259,7 +259,11 @@ pars.fmsm <- function(x, trans, newdata=NULL, tvar="trans")
         basepar <- matrix(nrow=ntr, ncol=length(x[[1]]$dlist$pars), dimnames=list(NULL,x[[1]]$dlist$pars))
         for (i in 1:ntr){
             X <- if (x[[i]]$ncovs==0) matrix(0) else {
-              ## If only a single value is supplied, duplicate this
+              ## If only a single value is supplied just return this from newdata
+              ## Note that if the data.frame is supplied directly in the model object
+              ## (by me adding this to the model object)
+              ## Then form.model.matrix will return a one row dataframe
+              ## Therefore can supply the newdata covariates as part of the model object
               if(nrow(newdata) == 1L) {
                 X <- form.model.matrix(x[[i]], as.data.frame(newdata))
               } else if(nrow(newdata) == ntr){
@@ -267,8 +271,6 @@ pars.fmsm <- function(x, trans, newdata=NULL, tvar="trans")
               } else stop("Newdata must have one row, or one row per allowed transition")
               }
             beta <- if (x[[i]]$ncovs==0) 0 else x[[i]]$res.t[x[[i]]$covpars,"est"]
-# minor change, added index to X
-            # browser()
             basepar[i,] <- add.covs(x[[i]], x[[i]]$res.t[x[[i]]$dlist$pars,"est"], beta, 
                                     X, transform=FALSE)
         }

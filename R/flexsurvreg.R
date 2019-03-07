@@ -954,7 +954,13 @@ print.flexsurvreg <- function(x, ...)
 }
 
 form.model.matrix <- function(object, newdata){
-    if("for_model_matrix_out" %in% names(object)) return(object$for_model_matrix_out)
+    if("for_model_matrix_out" %in% names(object)) {
+      print("Warning newdata argument is ignored and model dataframe is taken directly an extra element in the model object")
+      print("Covariate levels are :")
+      print(object$for_model_matrix_out)
+      return(object$for_model_matrix_out)
+      }
+  
     mfo <- model.frame(object)
 
     ## If required covariate missing, give a slightly more informative error message than, e.g.
@@ -988,16 +994,6 @@ form.model.matrix <- function(object, newdata){
     X
 }
 
-
-
-## To allow this to work on other data, create object directly, it is just a dataframe
-## wiht one row with predictors
-# form.model.matrix <- function(object, newdata) {
-# structure(c(0, 1, 2, 0, 1, 2), .Dim = 3:2, .Dimnames = list(c("1", 
-# "2", "3"), c("var1", "var2")), newdata = structure(list(var1 = c(0, 
-# 1, 2), var2 = c(0, 1, 2)), terms = ~var1 + var2, row.names = c(NA, 
-# 3L), class = "data.frame"))
-# }
 
 ##' @export
 vcov.flexsurvreg <- function (object, ...)

@@ -35,15 +35,18 @@ texted_augment <- map(texted_augment, function(x){
   x$for_model_matrix_out = data.frame(var1 =1, var2 = 1)
   x
   })
+texted_augment[[1]]$for_model_matrix_out[,1:2] <- c(0.1,0.2)
+texted_augment[[2]]$for_model_matrix_out[,1:2] <- c(0.3,0.4)
+texted_augment[[3]]$for_model_matrix_out[,1:2] <- c(0.45,0.9)
 
 ## Test models work, they do.
 a1 <- pmatrix.fs(bexp.list, 
                  trans = tmat, 
                  t = 1, 
-                 newdata = data.frame(var1 = c(1,1), var2 = c(1,1)),
+                 newdata = data.frame(var1 = c(1,1,2), var2 = c(1,1,2)),
                  ci = FALSE)
 a2 <- pmatrix.fs(texted_augment,
                  trans = tmat,
-                 t = 1,
-                 newdata = data.frame(var1 = c(1), var2 = c(1)),
+                 t = 5,
+                 newdata = data.frame(var1 = c(1,1,2), var2 = c(1,1,2)),
                  ci = FALSE)

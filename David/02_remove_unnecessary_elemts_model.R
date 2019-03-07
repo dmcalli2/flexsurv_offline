@@ -90,15 +90,18 @@ for(i in 2:length(models_all)){
 }
 
 ## Run the final test
-res_txt <- pmatrix.fs(models_all,
+models_all2 <- map2(models_all, list(c(1,1),c(2,2),c(3,3)), ~ {
+                   .x$for_model_matrix_out[] <- .y
+                   .x})
+res_txt <- pmatrix.fs(models_all2,
                  trans = tmat,
-                 t = seq(0,5, 1),
-                 newdata = data.frame(var1 = c(1), var2 = c(1)),
+                 t = seq(1),
+                 newdata = data.frame(var1 = NA, var2 = NA),
                  ci = FALSE)
 res_original <- pmatrix.fs(bexp.list,
                  trans = tmat,
                  t = 1,
-                 newdata = data.frame(var1 = c(1), var2 = c(1)),
+                 newdata = data.frame(var1 = c(1,2,3), var2 = c(1,2,3)),
                  ci = FALSE)
 
 ## Examine extension
